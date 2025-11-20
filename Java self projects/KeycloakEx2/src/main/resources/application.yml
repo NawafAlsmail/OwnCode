@@ -1,0 +1,16 @@
+server:
+  port : 8081
+spring:
+  application:
+    name: KeycloakEx2
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/MyNewRealm
+          jwk-set-uri: ${spring.security.oauth2.resource-server.jwt.issuer-uri}/protocol/openid-connect/certs
+jwt:
+  auth:
+    convertor:
+      resourceId: NewClient
+      principleAttributeName: preferred_username
