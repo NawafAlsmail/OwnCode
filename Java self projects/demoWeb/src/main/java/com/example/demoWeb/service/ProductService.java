@@ -33,9 +33,9 @@ public class ProductService {
 //                .findFirst().get();
     }
 
-    public void addProduct(Product prod) {
+    public Product addProduct(Product prod) {
 //        products.add(prod);
-        repo.save(prod);
+        return repo.save(prod);
     }
 
     public void updateProduct(Product prod){
