@@ -27,9 +27,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(auth -> auth.disable())
+        http
+                .csrf(auth -> auth.disable())
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/h2-console/**", "/register", "/login")
+                        auth.requestMatchers("/h2-console/**", "/register", "/login",
+                                        //these additional gateways are for the swagger
+                                        "/swagger-ui/**","/v2/api-docs",
+                                        "/v3/api-docs", "/v3/api-docs/**",
+                                        "/swagger-resources","/swagger-resources/**",
+                                        "/configuration/ui", "/configuration/security",
+                                        "/swagger-ui.html","/webjars/**", "/swagger-ui")
                                 .permitAll().anyRequest().authenticated());
         http.headers(auth->
                 auth.frameOptions(ath-> ath.sameOrigin()));

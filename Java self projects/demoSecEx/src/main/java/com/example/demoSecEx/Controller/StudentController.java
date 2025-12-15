@@ -20,7 +20,7 @@ public class StudentController {
         private AtomicInteger idCounter = new AtomicInteger();
 
 
-    @RequestMapping("/students")
+    @GetMapping("/students")
     public List<Student> getStudents() {
         return students;
     }

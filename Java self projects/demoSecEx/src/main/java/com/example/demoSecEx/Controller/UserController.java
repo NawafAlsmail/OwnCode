@@ -34,7 +34,7 @@ public class UserController {
         return service.verify(user);
     }
 
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id){
         return ResponseEntity.ok(service.getUser(id));
     }
