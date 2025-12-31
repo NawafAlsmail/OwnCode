@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://com.example/webSoap"
+           xmlns:tns="http://com.example/webSoap"
+           elementFormDefault="qualified">
+
+    <!--           xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"-->
+    <!--           jaxb:version="2.1"-->
+
+    <!-- Named Complex Type for Request -->
+    <xs:element name="CustomerRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="customerName" type="xs:string"/>
+                <xs:element name="age" type="xs:int"/>
+                <xs:element name="yearlyIncome" type="xs:long"/>
+                <xs:element name="cibilScore" type="xs:int"/>
+                <xs:element name="employmentMode" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Named Complex Type for Response -->
+    <xs:element name="Acknowledgment">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="isEligible" type="xs:boolean"/>
+                <xs:element name="approvedAmount" type="xs:long"/>
+                <xs:element name="criteriaMismatch" type="xs:string" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Root Elements -->
+<!--    <xs:element name="CustomerRequest" type="tns:CustomerRequestType"/>-->
+<!--    <xs:element name="Acknowledgment" type="tns:AcknowledgmentType"/>-->
+
+<!--    &lt;!&ndash; JAXB bindings to rename classes &ndash;&gt;-->
+<!--    <jaxb:bindings>-->
+<!--        <jaxb:bindings node="//xs:complexType[@name='CustomerRequestType']">-->
+<!--            <jaxb:class name="CustomerRequest"/>-->
+<!--        </jaxb:bindings>-->
+<!--        <jaxb:bindings node="//xs:complexType[@name='AcknowledgmentType']">-->
+<!--            <jaxb:class name="Acknowledgment"/>-->
+<!--        </jaxb:bindings>-->
+<!--    </jaxb:bindings>-->
+</xs:schema>

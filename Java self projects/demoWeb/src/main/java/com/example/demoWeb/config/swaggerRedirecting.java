@@ -1,8 +1,10 @@
-package com.example.demoWeb.Controller;
+package com.example.demoWeb.config;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+
+// an old one
 @Controller
 public class swaggerRedirecting {
     @GetMapping("/swagger-ui.html")
