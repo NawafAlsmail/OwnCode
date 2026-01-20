@@ -2,8 +2,12 @@ package com.example.demoWeb.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Objects;
@@ -21,8 +26,8 @@ import java.util.stream.Stream;
 @OpenAPIDefinition(
         servers = {
                 @Server(
-                        description = "DEV ENV",
-                        url = "http://localhost:8080/api"
+                        description = "Internal Usage Env",
+                        url = "http://localhost:${server.port}${server.servlet.context-path}"
                 )
         }
 )
@@ -34,11 +39,13 @@ public class SwaggersConfig implements WebMvcConfigurer {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Swagger API's Documentation")
+                        .title("Swagger API Documentation")
                         .description("""
                                This documentation shows all the endpoints and its properties.
                                
-                               Above at the " /partner/v3/api-docs " link, you will find\n
+                               This documentation and APIs are for internal use only
+                               
+                               Above at the " /v3/api-docs/public-apis " link, you will find\n
                                the documentation on JSON format with each endpoint's request method.
                                
                                
@@ -48,7 +55,14 @@ public class SwaggersConfig implements WebMvcConfigurer {
                                - Use tags to navigate logical channels
                                """)
                         .version("1.0.0")
-                );
+                        .license(new License()
+                                .name("The UI Store")
+                                .url("www.goggle.com"))
+                )
+                //this is for clickable extra links if needed
+                .externalDocs(new ExternalDocumentation()
+                        .description("Full API Guide & Tutorials")
+                        .url(""));
     }
     // redirecting the Swagger UI url
     @Override
@@ -67,8 +81,21 @@ public class SwaggersConfig implements WebMvcConfigurer {
                 .build();
     }
 
-    // Checks if a controller class has @SwaggerVisibility
+    // Check if method/class contains @SwaggerVisibility
     private boolean isSwaggerVisible(Method method) {
+        // Check if the method itself has @SwaggerVisibility directly
+        if (method.isAnnotationPresent(SwaggerVisibility.class)) {
+            return true;
+        }
+
+        // Check annotations on the method for @SwaggerVisibility as meta-annotation (inner annotation)
+        for (Annotation annotation : method.getAnnotations()) {
+            if (annotation.annotationType().isAnnotationPresent(SwaggerVisibility.class)) {
+                return true;
+            }
+        }
+
+        // Check on the class level
         return method.getDeclaringClass().isAnnotationPresent(SwaggerVisibility.class);
     }
 
@@ -87,9 +114,9 @@ public class SwaggersConfig implements WebMvcConfigurer {
                     Stream<String> requestSchemas = operation.getRequestBody() == null ||
                             operation.getRequestBody().getContent() == null ? Stream.empty() :
                             operation.getRequestBody().getContent().values().stream()
-                                    .map(mediaType -> mediaType.getSchema())
+                                    .map(MediaType::getSchema)
                                     .filter(Objects::nonNull)
-                                    .map(schema -> schema.get$ref())
+                                    .map(Schema::get$ref)
                                     .filter(Objects::nonNull)
                                     .map(ref -> ref.replace("#/components/schemas/", ""));
 

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
-// an old one
+// an old one that i don't need
 @Controller
 public class swaggerRedirecting {
     @GetMapping("/swagger-ui.html")
